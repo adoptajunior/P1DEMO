@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { UserContext } from '../../context/UserContext/UserState'
 import { Form, Input, Button } from 'antd'
 
+// comprobación LOGIN / LOGOUT
 const Login = () => {
 	const { login } = useContext(UserContext)
 
@@ -12,14 +13,19 @@ const Login = () => {
 	useEffect(() => {
 		setTimeout(() => {
 			const foundToken = JSON.parse(localStorage.getItem('token'))
-
+			// si está logeado con sus datos
 			if (foundToken) {
 				navigate('/profile')
 			}
 		}, 2000)
 	}, [login])
+	// si no mantendría la opción de login 
 
+	// sería equivalente al submit del formulario, pero en esta librería
 	const onFinish = (values) => {
+		// se trae el login hecho en UserState.jsx (PASO 1)
+		// lo que manda el usuario pasa por el body de la función:
+		// const login = async (user) => {...}
 		login(values)
 	}
 
@@ -27,6 +33,7 @@ const Login = () => {
 		console.log('Failed:', errorInfo)
 	}
 
+	// componentes de la librería 
 	return (
 		<div className="container">
 			<Form
@@ -34,6 +41,8 @@ const Login = () => {
 				labelCol={{ span: 8 }}
 				wrapperCol={{ span: 16 }}
 				initialValues={{ remember: true }}
+				// metemos nuestra lógica dentro de
+				// las etiquetas que usa la librería
 				onFinish={onFinish}
 				onFinishFailed={onFinishFailed}
 				autoComplete="off"
