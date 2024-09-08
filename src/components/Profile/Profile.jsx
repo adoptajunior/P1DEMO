@@ -13,6 +13,8 @@ const Profile = () => {
 
 	// Ternaria > si el usuario no es null
 	// pinta un h1 
+	// al identifica al usuario (token) nos muestra la info
+	// navegador > Componentes > UserProvider > hooks...
 	return <>{user ? <h1>Profile {user.name}</h1> : <p>Loading...</p>}</>
 }
 export default Profile
