@@ -26,7 +26,37 @@ const products = (state, action) => {
                 ...state,
                 cart: [],
             }
-
+        // case eliminar producto
+        case 'DELETE_PRODUCT':
+            return {
+                ...state,
+                products: state.products.filter(
+                    (product) => product._id !== action.payload._id
+                ),
+            }
+        // case crear producto
+        case 'CREATE_PRODUCT':
+            return {
+                ...state,
+                products: [...state.products, action.payload]
+            }
+        // producto por ID
+        case 'GET_PRODUCT_BY_ID':
+            return {
+                ...state,
+                product: action.payload,
+            }
+        // editar producto
+        case 'EDIT_PRODUCT':
+            return {
+                ...state,
+                products: state.products.map((product) => {
+                    if (product._id === action.payload.product._id) {
+                        product = action.payload.product
+                    }
+                    return product
+                }),
+            }
 
         default:
             return state

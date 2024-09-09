@@ -11,6 +11,8 @@ const initialState = {
     // también puede ser:
     // cart : cart || [],
     cart: cart ? cart : [],
+    // nuevo estado que sea sólo para un producto
+    product: {},
 }
 
 // para poder reutilizarla
@@ -56,19 +58,65 @@ export const ProductsProvider = ({ children }) => {
             type: 'CLEAR_CART',
         })
     }
-    return (
-        <ProductsContext.Provider
-            value={{
-                products: state.products,
-                cart: state.cart,
-                getProducts,
-                addCart,
-                clearCart,
-            }}
-        >
-            {children}
-        </ProductsContext.Provider>
-    )
+
+    // ELIMINAR PRODUCTO
+    const deleteProduct = async (id) => {
+        const token = JSON.parse(localStorage.getItem('token'))
+        const res = await axios.delete(`${API_URL}/products/id/${id}`, {
+            headers: {
+                authorization: token,
+            },
+        })
+        // queremos que lo elimine también del array de productos
+        // para que conste en la base de datos y visualmente
+        // el producto tampoco aparezca
+        dispatch({
+            type: 'DELETE_PRODUCT',
+            payload: res.data.response,
+        })
+    }
+
+    // CREAR PRODUCTO
+    const createProduct = async (product) => {
+        const token = JSON.parse(localStorage.getItem('token'))
+        // le pasamos el product a crear
+        const res = await axios.post(`${API_URL}/products`, product, {
+            headers: { authorization: token },
+        })
+        dispatch({
+            type: 'CREATE_PRODUCT',
+            payload: res.data,
+        })
+        return res
+    }
+
+    // GET PRODUCT BY ID
+    // recibe el ID por parámetro
+    const getProductById = async (id) => {
+        // y le pasamos el ID de la tarea
+        const res = await axios.get(`${API_URL}/products/id/${id}`)
+        dispatch({
+            type: 'GET_PRODUCT_BY_ID',
+            payload: res.data,
+        })
+    }
+
+    // EDITAR PRODUCTO
+    // recibe el ID por parámetro
+    const editProduct = async (product, id) => {
+        const token = JSON.parse(localStorage.getItem('token'))
+        // y le pasamos el _id del producto 
+        // pasamos product editado
+        const res = await axios.put(`${API_URL}/products/${id}`, product, {
+            headers: { authorization: token },
+        })
+        dispatch({
+            type: 'EDIT_PRODUCT',
+            payload: res.data,
+        })
+        return res
+    }
+
 
     // exportamos
     return (
@@ -76,10 +124,16 @@ export const ProductsProvider = ({ children }) => {
             value={{
                 // primero los estados
                 products: state.products,
+                product: state.product,
                 cart: state.cart,
-                // después el método
+                // después los métodos
                 getProducts,
                 addCart,
+                clearCart,
+                deleteProduct,
+                createProduct,
+                getProductById,
+                editProduct,
             }}
         >
             {children}

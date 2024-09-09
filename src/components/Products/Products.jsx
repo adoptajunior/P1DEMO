@@ -2,6 +2,7 @@
 // HOOKS
 import { useContext, useEffect } from 'react'
 import { ProductsContext } from '../../context/ProductsContext/ProductsState'
+
 const Products = () => {
     const { getProducts, products, addCart, cart } = useContext(ProductsContext)
     useEffect(() => {
