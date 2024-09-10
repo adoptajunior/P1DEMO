@@ -34,6 +34,8 @@ export const UserProvider = ({ children }) => {
 	const [state, dispatch] = useReducer(UserReducer, initialState)
 	// primer método: login
 	// variable que recupera la petición POST al usuario
+
+	// CONEXIÓN CRUD
 	const login = async (user) => {
 		// esto lo recuperamos luego en Login.jsx (const onFinish)
 		const res = await axios.post(`${API_URL}/users/login`, user)
